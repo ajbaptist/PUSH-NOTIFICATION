@@ -85,43 +85,17 @@ class _HomeState extends State<Home> {
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
-      var action = message.data['action'];
+
       if (notification != null) {
         FlutterLocalNotificationsPlugin().show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-                android: AndroidNotificationDetails(
-                    channel.id, channel.name, channel.description,
-                    color: Colors.blue, icon: '@mipmap/ic_launcher')),
-            payload: action!);
-        FlutterLocalNotificationsPlugin().initialize(init,
-            onSelectNotification: (action) async {
-          if (action == 'ORDER') {
-            _navigation!.currentState!.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Order()),
-              (Route<dynamic> route) => false,
-            );
-          }
-          if (action == 'QUERY') {
-            _navigation!.currentState!.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Query()),
-              (Route<dynamic> route) => false,
-            );
-          }
-          if (action == 'REJECTED') {
-            _navigation!.currentState!.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Reject()),
-              (Route<dynamic> route) => false,
-            );
-          } else {
-            _navigation!.currentState!.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Dispatch()),
-              (Route<dynamic> route) => false,
-            );
-          }
-        });
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id, channel.name, channel.description,
+                  color: Colors.blue, icon: '@mipmap/ic_launcher')),
+        );
       }
     });
     super.initState();
