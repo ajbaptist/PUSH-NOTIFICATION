@@ -13,6 +13,8 @@ import 'package:push_notification/utils.dart';
 
 Utils utils = Utils();
 
+int count = 0;
+
 GlobalKey<NavigatorState>? _navigation = GlobalKey(debugLabel: 'BOOKING');
 
 String url =
@@ -61,6 +63,7 @@ class _HomeState extends State<Home> {
     var init = InitializationSettings(android: android, iOS: ios);
     FlutterLocalNotificationsPlugin().initialize(init,
         onSelectNotification: (payload) async {
+      FlutterAppBadger.removeBadge();
       if (payload == 'ORDER') {
         _navigation!.currentState!.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Order()),
@@ -166,10 +169,10 @@ class _HomeState extends State<Home> {
 }
 
 showNotification({required String goto}) async {
-  FlutterAppBadger.updateBadgeCount(1);
+  FlutterAppBadger.updateBadgeCount(count++);
   var android = AndroidNotificationDetails(
       'channelId', 'channelName', 'channelDescription',
-      importance: Importance.max,
+      importance: Importance.defaultImportance,
       playSound: true,
       styleInformation: await styleInfo());
   var ios = IOSNotificationDetails();
@@ -187,34 +190,3 @@ Future styleInfo() async => BigPictureStyleInformation(
 
 AndroidNotificationChannel channel =
     AndroidNotificationChannel('1', 'name', 'description');
-
-// String? string;
-// String serverKey =
-//     'AAAApOCFnQ8:APA91bE_VU4mIgxzMleHpJPTBXqCvj_rgIg_O0g46tX6TmTaFJKEv6_WH5aBIxHtdafFCjKQuPevAt5wCpoItK4X9g-LUqj-IodIIs7kLos446Ka6V02fqVSQY9BsRi4-eBBiOzb4NRk';
-// int serverId = 708141489423;
-
-// Future<void> sendAndRetrieveMessage(
-//     {String? token, required String navigation}) async {
-//   await http.post(
-//     Uri.parse('https://fcm.googleapis.com/fcm/send'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': 'key=$serverKey',
-//     },
-//     body: jsonEncode(
-//       <String, dynamic>{
-//         'notification': <String, dynamic>{
-//           'body': 'CLICK TO MORE',
-//           'title': 'BASED ON YOUR ORDER'
-//         },
-//         'priority': 'high',
-//         'data': <String, dynamic>{
-//           'action': navigation,
-//           'id': '1',
-//           'status': 'done'
-//         },
-//         'to': token,
-//       },
-//     ),
-//   );
-// }
